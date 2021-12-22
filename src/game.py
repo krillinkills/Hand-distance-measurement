@@ -15,6 +15,9 @@ y = [20,25,30,35,40,45,50,55,60,65,70,80,85,90,95,100]
 
 coff = np.polyfit(x,y,2)
 
+#Game
+cx,cy=250,250
+color=(255,0,255)
 
 while True:
     success, img = capture.read()
@@ -31,7 +34,10 @@ while True:
 
         #print(distance,distanceCM)
         cvzone.putTextRect(img,f'{int(distanceCM)}cm',(x,y))
-
+        
+        
+        #Button
+        cv2.circle(img,(cx,cy),30,color,cv2.FILLED )
     cv2.imshow("Image", img)
     cv2.waitKey(1)
 
