@@ -3,6 +3,8 @@ from cvzone.HandTrackingModule import HandDetector
 import math
 import numpy as np
 import cvzone
+import random
+import time
 
 capture = cv2.VideoCapture(0)
 capture.set(3, 1280)
@@ -18,6 +20,8 @@ coff = np.polyfit(x,y,2)
 #Game
 cx,cy=250,250
 color=(255,0,255)
+counter=0
+score=0
 
 while True:
     success, img = capture.read()
@@ -33,11 +37,33 @@ while True:
         distanceCM=A*distance**2+B*distance+C
 
         #print(distance,distanceCM)
+
+        if distanceCM<40:
+            if x<cx<x+w and y<y<y+h:
+                counter=1
         cvzone.putTextRect(img,f'{int(distanceCM)}cm',(x,y))
         
-        
+    if counter:
+        counter+=1
+        color=(0,255,0)
+        if counter == 3:
+            cx=random.randint(100,1100)
+            cy=random.randint(100,600)
+            score+=1
+            color=(255,0,255)
+            counter=0
+
         #Button
-        cv2.circle(img,(cx,cy),30,color,cv2.FILLED )
+    cv2.circle(img,(cx,cy),30,color,cv2.FILLED)
+    cv2.circle(img,(cx,cy),10,(255,255,255),cv2.FILLED)
+    cv2.circle(img,(cx,cy),20,(255,255,255),2)
+    cv2.circle(img,(cx,cy),30,(55,55,55),2)
+
+        #game HUD
+    cvzone.putTextRect(img,'Time:30',(1000,75),scale=3,offset=10)
+    cvzone.putTextRect(img,f'Score: {str(score).zfill(2)}',(1000,75),scale=3,offset=10)
+
+
     cv2.imshow("Image", img)
     cv2.waitKey(1)
 
